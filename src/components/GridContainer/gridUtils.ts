@@ -1,7 +1,7 @@
 import { Cartesian2, Cartesian3, Rectangle, Math as CesiumMath, Cartographic, Color } from 'cesium';
 import { useCesium } from 'resium';
 
-const DENSITY = 10;
+const DENSITY = 7;
 
 const MINS = [
   CesiumMath.toRadians(0.05),

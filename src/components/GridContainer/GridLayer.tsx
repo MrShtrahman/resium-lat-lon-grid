@@ -8,14 +8,14 @@ const GridLayer = () => {
     const { latsLines, lonsLines } = drawGrid(extent);
 
     return <>
-        {latsLines.map(({ color, lat, lon, path, text }) => <>
+        {latsLines.map(({ color, lat, lon, path, text }) => <div key={text}>
             <GridPolyline {...{ color, path }} />
             <GridLabel {...{ lat, lon, text, isLat: true }} />
-        </>)}
-        {lonsLines.map(({ color, lat, lon, path, text }) => <>
+        </div>)}
+        {lonsLines.map(({ color, lat, lon, path, text }) => <div key={text}>
             <GridPolyline {...{ color, path }} />
             <GridLabel {...{ lat, lon, text, isLat: false }} />
-        </>)}
+        </div>)}
     </>
 }
 
