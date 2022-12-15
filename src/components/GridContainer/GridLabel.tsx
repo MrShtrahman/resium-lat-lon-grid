@@ -1,4 +1,4 @@
-import { Cartesian2, Cartesian3, Cartographic, Color, HorizontalOrigin, LabelStyle, VerticalOrigin } from "cesium";
+import { Cartesian2, Cartesian3, Cartographic, Color, HorizontalOrigin, LabelStyle, NearFarScalar, VerticalOrigin } from "cesium";
 import { useScreenCenterPosition } from './gridUtils';
 import { useCesium, Entity, LabelGraphics } from 'resium';
 
@@ -23,7 +23,6 @@ const adjustLabelText = (input: string): string => {
 }
 
 const GridLabel = ({ lat, lon, text, isLat }: GridLabelProps) => {
-    const color = Color.WHITE;
     const { globe } = useCesium();
     const center = useScreenCenterPosition();
 
@@ -36,8 +35,9 @@ const GridLabel = ({ lat, lon, text, isLat }: GridLabelProps) => {
     const labelText = adjustLabelText(text);
 
     return <Entity {...{ position }}>
-        <LabelGraphics text={labelText} font='normal' 
-            fillColor={color} outlineColor={color} style={LabelStyle.FILL}
+        <LabelGraphics text={labelText} font='bold 1rem Arial' 
+            fillColor={Color.WHITE} outlineColor={Color.BLACK} style={LabelStyle.FILL_AND_OUTLINE}
+            outlineWidth={4} scaleByDistance={new NearFarScalar(1, 0.85, 8.0e6, .75)}
             pixelOffset={new Cartesian2(isLat ? 0 : 4, isLat ? -6 : 0)}
             eyeOffset={Cartesian3.ZERO} scale={1.0} 
             horizontalOrigin={isLat ? HorizontalOrigin.CENTER : HorizontalOrigin.LEFT}

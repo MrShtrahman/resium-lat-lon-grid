@@ -4,17 +4,10 @@ import { useCesium } from 'resium';
 const DENSITY = 7;
 
 const MINS = [
-  CesiumMath.toRadians(0.05),
-  CesiumMath.toRadians(0.1),
-  CesiumMath.toRadians(0.2),
-  CesiumMath.toRadians(0.5),
-  CesiumMath.toRadians(1.0),
-  CesiumMath.toRadians(2.0),
-  CesiumMath.toRadians(5.0),
-  CesiumMath.toRadians(10.0)
-];
+  0.00675, 0.0125, 0.025, 0.05, 0.1, 0.2, 0.5, 1.0, 2.0, 5.0, 10.0
+].map(CesiumMath.toRadians);
 
-const GRANULARITY = CesiumMath.toRadians(1);
+const GRANULARITY = CesiumMath.toRadians(3);
 
 export const gridPrecision = (dDeg: number): number => {
   if (dDeg < 0.01) return 3;
@@ -44,18 +37,18 @@ export const useScreenCenterPosition = (): Cartographic => {
 export const convertDEGToDMS = (deg: number, lat: boolean): string => {
   const absolute = Math.abs(deg);
 
-  const degrees = Math.floor(absolute);
+  const degrees = ~~absolute;
   const minutesNotTruncated = (absolute - degrees) * 60;
-  const minutes = Math.floor(minutesNotTruncated);
+  const minutes = ~~minutesNotTruncated;
   const seconds = ((minutesNotTruncated - minutes) * 60).toFixed(2);
 
-  const direction = lat ? (deg >= 0 ? 'N' : 'S') : deg >= 0 ? 'E' : 'W';
-  let text = `${degrees}°`;
-  if (minutes || seconds !== '0.00') text += `${minutes}'`;
-  if (seconds !== '0.00') text += `${seconds}"`;
-  text += direction;
+  let minSec = '';
+  if (minutes || seconds !== '0.00') minSec += `${minutes}'`;
+  if (seconds !== '0.00') minSec += `${minutes}'`;
 
-  return text;
+  return `${degrees}°${minSec.padStart(2, '0')}${
+    lat ? (deg >= 0 ? 'N' : 'S') : deg >= 0 ? 'E' : 'W'
+  }`;
 };
 
 export const useExtentView = (): Rectangle => {
@@ -167,7 +160,7 @@ export const drawGrid = (extent: Rectangle): { lonsLines: LatLonLine[], latsLine
       parseFloat(degLat.toFixed(gridPrecision(dLat))),
       true
     );
-    const color = text === '0°N' ? Color.YELLOW : Color.WHITE;
+    const color = text === '0°N' ? Color.YELLOW : Color.WHITE.withAlpha(0.5);
     latsLines.push({ color, lat, lon: longitudeText, text, path });
   }
 
